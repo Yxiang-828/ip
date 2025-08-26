@@ -11,12 +11,12 @@ public class StarPlatinum {
         System.out.println("Hello from\n" + logo);
 
         String greeting = "____________________________________________________________\n"
-                + "Hello! I'm Star Platinum\n"
-                + "What can I do for you?\n"
+                + " Hello! I'm Star Platinum\n"
+                + " What can I do for you?\n"
                 + "____________________________________________________________";
 
         String farewell = "____________________________________________________________\n"
-                + "Bye. Hope to see you again soon!\n"
+                + " Bye. Hope to see you again soon!\n"
                 + "____________________________________________________________";
 
         System.out.println(greeting);
