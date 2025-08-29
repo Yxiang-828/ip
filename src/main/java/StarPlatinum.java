@@ -1,5 +1,5 @@
-
 import java.util.Scanner;
+import java.util.Vector;
 
 public class StarPlatinum {
         public static void main(String[] args) {
@@ -14,7 +14,7 @@ public class StarPlatinum {
 
                 String greeting = "____________________________________________________________\n" +
                                 "ORA ORA ORA ORA ORA!\n" +
-                                "Star Platinum is here — what can I do for you?\n" +
+                                "Star Platinum is here, what can I do for you?\n" +
                                 "____________________________________________________________";
 
                 String farewell = "____________________________________________________________\n" +
@@ -23,15 +23,27 @@ public class StarPlatinum {
 
                 System.out.println(greeting + "\n");
 
+                Vector<String> tasks = new Vector<>();
                 Scanner scanner = new Scanner(System.in);
 
                 String userInput = "";
                 while (!userInput.equals("bye")) {
                         userInput = scanner.nextLine();
 
-                        if (!userInput.equals("bye")) {
+                        if (userInput.equals("list")) {
                                 System.out.println("____________________________________________________________");
-                                System.out.println(userInput);
+                                if (tasks.isEmpty()) {
+                                        System.out.println("Your task list is empty!");
+                                } else {
+                                        for (int i = 0; i < tasks.size(); i++) {
+                                                System.out.println(" " + (i + 1) + ". " + tasks.get(i));
+                                        }
+                                }
+                                System.out.println("____________________________________________________________\n");
+                        } else if (!userInput.equals("bye")) {
+                                tasks.add(userInput);
+                                System.out.println("____________________________________________________________");
+                                System.out.println("added: " + userInput);
                                 System.out.println("____________________________________________________________\n");
                         }
                 }
