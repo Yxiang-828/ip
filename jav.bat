@@ -1,4 +1,6 @@
 @echo off
-javac C:\Users\xiang\duke\src\main\java\StarPlatinum.java
-java C:\Users\xiang\duke\src\main\java\StarPlatinum.java
+cd .\src\main\java
+javac *.java
+java StarPlatinum.java
+cd ..\..\..
 pause

@@ -4,51 +4,9 @@ import java.util.Vector;
 /**
  * Star Platinum task manager application.
  * A JoJo's Bizarre Adventure themed todo list manager.
+ * Now supports ToDos, Deadlines, and Events!
  */
 public class StarPlatinum {
-    /**
-     * Represents a task with a description and completion status.
-     */
-    public static class Task {
-        protected String description;
-        protected boolean isDone;
-
-        /**
-         * Creates a new task with the given description.
-         * The task is initially marked as not done.
-         *
-         * @param description The description of the task.
-         */
-        public Task(String description) {
-            this.description = description;
-            this.isDone = false;
-        }
-
-        /**
-         * Marks the task as completed.
-         */
-        public void mark() {
-            this.isDone = true;
-        }
-
-        /**
-         * Marks the task as not completed.
-         */
-        public void unmark() {
-            this.isDone = false;
-        }
-
-        /**
-         * Returns a string representation of the task.
-         * Completed tasks are shown with [X], incomplete tasks with [ ].
-         *
-         * @return String representation of the task.
-         */
-        public String toString() {
-            return (isDone ? "[X]" : "[ ]") + description;
-        }
-    }
-
     /**
      * Main method that runs the Star Platinum task manager.
      *
@@ -65,12 +23,12 @@ public class StarPlatinum {
         System.out.println("Hello from\n" + logo);
 
         String greeting = "____________________________________________________________\n"
-                + " ORA ORA ORA ORA ORA!\n"
-                + " Star Platinum is here, what can I do for you?\n"
+                + "ORA ORA ORA ORA ORA!\n"
+                + "Star Platinum is here, what can I do for you?\n"
                 + "____________________________________________________________";
 
         String farewell = "____________________________________________________________\n"
-                + " Yare Yare Daze... Star Platinum will see you again.\n"
+                + "Yare Yare Daze... Star Platinum will see you again.\n"
                 + "____________________________________________________________";
 
         System.out.println(greeting + "\n");
@@ -86,29 +44,36 @@ public class StarPlatinum {
             int taskNumber = -1;
 
             if ((command.equals("mark") || command.equals("unmark")) && parts.length >= 2) {
-                taskNumber = Integer.parseInt(parts[1]);
+                try {
+                    taskNumber = Integer.parseInt(parts[1]);
+                } catch (NumberFormatException e) {
+                    taskNumber = -1; // Invalid number
+                }
             }
 
             if (command.equals("list")) {
-                int i = 0;
-                System.out.println("Zaaaa Woruuudo");
-                while (i < storage.size()) {
-                    System.out.println((i + 1) + "." + storage.get(i));
-                    i++;
+                System.out.println("____________________________________________________________");
+                if (storage.isEmpty()) {
+                    System.out.println("Here are the tasks in your list:");
+                    System.out.println("Your list is empty! Time to add some tasks.");
+                } else {
+                    System.out.println("Here are the tasks in your list:");
+                    for (int i = 0; i < storage.size(); i++) {
+                        System.out.println((i + 1) + "." + storage.get(i));
+                    }
                 }
-                System.out.println('\n');
+                System.out.println("____________________________________________________________\n");
             } else if (command.equals("mark") || command.equals("unmark")) {
                 if (parts.length < 2) {
                     System.out.println("Which task number would you like to " + command + "?");
 
                     // Display task list
-                    int i = 0;
-                    System.out.println("Zaaaa Woruuudo");
-                    while (i < storage.size()) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Here are the tasks in your list:");
+                    for (int i = 0; i < storage.size(); i++) {
                         System.out.println((i + 1) + "." + storage.get(i));
-                        i++;
                     }
-                    System.out.println('\n');
+                    System.out.println("____________________________________________________________");
 
                     // Get task number from user
                     boolean isValid = false;
@@ -134,18 +99,92 @@ public class StarPlatinum {
                 if (taskNumber > 0 && taskNumber <= storage.size()) {
                     if (command.equals("mark")) {
                         storage.get(taskNumber - 1).mark();
-                        System.out.println("Marked task: " + storage.get(taskNumber - 1));
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Nice! I've marked this task as done:");
+                        System.out.println("  " + storage.get(taskNumber - 1));
+                        System.out.println("____________________________________________________________");
                     } else {
                         storage.get(taskNumber - 1).unmark();
-                        System.out.println("Unmarked task: " + storage.get(taskNumber - 1));
+                        System.out.println("____________________________________________________________");
+                        System.out.println("OK, I've marked this task as not done yet:");
+                        System.out.println("  " + storage.get(taskNumber - 1));
+                        System.out.println("____________________________________________________________");
                     }
                 } else {
+                    System.out.println("____________________________________________________________");
                     System.out.println("Invalid task number.");
+                    System.out.println("____________________________________________________________");
                 }
-                System.out.println('\n');
+                System.out.println();
+            } else if (command.equals("todo") && parts.length > 1) {
+                // Handle "todo DESCRIPTION"
+                String description = userInput.substring(5).trim();
+                Task newTask = new ToDo(description);
+                storage.add(newTask);
+                System.out.println("____________________________________________________________");
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + newTask);
+                System.out.println("Now you have " + storage.size() + " task" +
+                        (storage.size() == 1 ? "" : "s") + " in the list.");
+                System.out.println("____________________________________________________________\n");
+            } else if (command.equals("deadline")) {
+                // Handle "deadline DESCRIPTION /by DATE"
+                String remaining = userInput.substring(9); // Remove "deadline "
+                String[] byParts = remaining.split(" /by ", 2);
+
+                if (byParts.length == 2 && !byParts[0].trim().isEmpty() && !byParts[1].trim().isEmpty()) {
+                    Task newTask = new Deadline(byParts[0].trim(), byParts[1].trim());
+                    storage.add(newTask);
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Got it. I've added this task:");
+                    System.out.println("  " + newTask);
+                    System.out.println("Now you have " + storage.size() + " task" +
+                            (storage.size() == 1 ? "" : "s") + " in the list.");
+                    System.out.println("____________________________________________________________\n");
+                } else {
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
+                    System.out.println("____________________________________________________________\n");
+                }
+            } else if (command.equals("event")) {
+                // Handle "event DESCRIPTION /from START /to END"
+                String remaining = userInput.substring(6); // Remove "event "
+                String[] fromParts = remaining.split(" /from ", 2);
+
+                if (fromParts.length == 2) {
+                    String description = fromParts[0].trim();
+                    String[] toParts = fromParts[1].split(" /to ", 2);
+
+                    if (toParts.length == 2 && !description.isEmpty() &&
+                            !toParts[0].trim().isEmpty() && !toParts[1].trim().isEmpty()) {
+                        Task newTask = new Event(description, toParts[0].trim(), toParts[1].trim());
+                        storage.add(newTask);
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Got it. I've added this task:");
+                        System.out.println("  " + newTask);
+                        System.out.println("Now you have " + storage.size() + " task" +
+                                (storage.size() == 1 ? "" : "s") + " in the list.");
+                        System.out.println("____________________________________________________________\n");
+                    } else {
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
+                        System.out.println("____________________________________________________________\n");
+                    }
+                } else {
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
+                    System.out.println("____________________________________________________________\n");
+                }
             } else if (!command.equals("bye") && taskNumber == -1) {
-                storage.add(new Task(userInput));
-                System.out.println("added: " + storage.lastElement() + "\n");
+                // Treat as plain ToDo for backward compatibility
+                Task newTask = new ToDo(userInput);
+                storage.add(newTask);
+                System.out.println("____________________________________________________________");
+                System.out.println("Got it. I've added this task:");
+                System.out.println("  " + newTask);
+                System.out.println("Now you have " + storage.size() + " task" +
+                        (storage.size() == 1 ? "" : "s") + " in the list.");
+                System.out.println("____________________________________________________________\n");
             }
         }
 
