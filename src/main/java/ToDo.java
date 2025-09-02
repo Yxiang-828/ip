@@ -3,7 +3,7 @@ public class ToDo extends Task {
     /**
      * Creates a new ToDo task.
      *
-     * @param description
+     * @param description Task description.
      */
     public ToDo(String description) {
         super(description);
@@ -13,7 +13,7 @@ public class ToDo extends Task {
      * Returns a string representation of the ToDo task.
      * Shows [T] to indicate this is a ToDo task.
      *
-     * @return
+     * @return String representation with ToDo task indicator.
      */
     @Override
     public String toString() {
