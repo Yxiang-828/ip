@@ -1,0 +1,14 @@
+list
+todo test ToDo command
+deadline return book /by Sunday
+event team meeting /from Mon 2pm /to 4pm
+mark
+1
+list
+unmark 1
+list
+deadline missingbyfield
+read something nice
+mark 3
+list
+bye
