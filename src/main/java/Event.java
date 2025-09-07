@@ -19,6 +19,7 @@ public class Event extends Task {
     }
 
     /**
+     * Returns a string representation of the event task.
      * Shows [E] and includes the start and end time information.
      *
      * @return String representation with event timing info.

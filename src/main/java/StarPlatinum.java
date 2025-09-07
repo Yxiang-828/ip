@@ -1,3 +1,4 @@
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -37,8 +38,21 @@ public class StarPlatinum {
         Scanner scanner = new Scanner(System.in);
 
         String userInput = "";
-        while (!userInput.equals("bye")) {
-            userInput = scanner.nextLine();
+        while (!userInput.trim().equals("bye")) {
+            try {
+                userInput = scanner.nextLine();
+            } catch (NoSuchElementException | IllegalStateException e) {
+                // Catches if input stream is gone or scanner is closed
+                System.out.println("Input error occurred. Exiting...");
+                break;
+            }
+
+            // Check for empty or whitespace-only input
+            if (userInput.trim().isEmpty()) {
+                System.out.println("Please enter a command. Type 'list' to see your tasks or 'bye' to exit.");
+                continue; // Skip to next iteration
+            }
+
             String[] parts = userInput.split(" ");
             String command = parts[0];
             int taskNumber = -1;
@@ -118,64 +132,106 @@ public class StarPlatinum {
                 System.out.println();
             } else if (command.equals("todo") && parts.length > 1) {
                 // Handle "todo DESCRIPTION"
-                String description = userInput.substring(5).trim();
-                Task newTask = new ToDo(description);
-                storage.add(newTask);
-                System.out.println("____________________________________________________________");
-                System.out.println("Got it. I've added this task:");
-                System.out.println("  " + newTask);
-                System.out.println("Now you have " + storage.size() + " task" +
-                        (storage.size() == 1 ? "" : "s") + " in the list.");
-                System.out.println("____________________________________________________________\n");
+                try {
+                    if (userInput.length() <= 5) {
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Invalid todo format! Use: todo DESCRIPTION");
+                        System.out.println("____________________________________________________________\n");
+                    } else {
+                        String description = userInput.substring(5).trim();
+                        if (description.isEmpty()) {
+                            System.out.println("____________________________________________________________");
+                            System.out.println("Todo description cannot be empty! Use: todo DESCRIPTION");
+                            System.out.println("____________________________________________________________\n");
+                        } else {
+                            Task newTask = new ToDo(description);
+                            storage.add(newTask);
+                            System.out.println("____________________________________________________________");
+                            System.out.println("Got it. I've added this task:");
+                            System.out.println("  " + newTask);
+                            System.out.println("Now you have " + storage.size() + " task" +
+                                    (storage.size() == 1 ? "" : "s") + " in the list.");
+                            System.out.println("____________________________________________________________\n");
+                        }
+                    }
+                } catch (StringIndexOutOfBoundsException e) {
+                    System.out.println("____________________________________________________________");
+                    System.out.println("Invalid todo format! Use: todo DESCRIPTION");
+                    System.out.println("____________________________________________________________\n");
+                }
             } else if (command.equals("deadline")) {
                 // Handle "deadline DESCRIPTION /by DATE"
-                String remaining = userInput.substring(9); // Remove "deadline "
-                String[] byParts = remaining.split(" /by ", 2);
+                try {
+                    if (userInput.length() <= 9) {
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
+                        System.out.println("____________________________________________________________\n");
+                    } else {
+                        String remaining = userInput.substring(9); // Remove "deadline "
+                        String[] byParts = remaining.split(" /by ", 2);
 
-                if (byParts.length == 2 && !byParts[0].trim().isEmpty() && !byParts[1].trim().isEmpty()) {
-                    Task newTask = new Deadline(byParts[0].trim(), byParts[1].trim());
-                    storage.add(newTask);
-                    System.out.println("____________________________________________________________");
-                    System.out.println("Got it. I've added this task:");
-                    System.out.println("  " + newTask);
-                    System.out.println("Now you have " + storage.size() + " task" +
-                            (storage.size() == 1 ? "" : "s") + " in the list.");
-                    System.out.println("____________________________________________________________\n");
-                } else {
+                        if (byParts.length == 2 && !byParts[0].trim().isEmpty() && !byParts[1].trim().isEmpty()) {
+                            Task newTask = new Deadline(byParts[0].trim(), byParts[1].trim());
+                            storage.add(newTask);
+                            System.out.println("____________________________________________________________");
+                            System.out.println("Got it. I've added this task:");
+                            System.out.println("  " + newTask);
+                            System.out.println("Now you have " + storage.size() + " task" +
+                                    (storage.size() == 1 ? "" : "s") + " in the list.");
+                            System.out.println("____________________________________________________________\n");
+                        } else {
+                            System.out.println("____________________________________________________________");
+                            System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
+                            System.out.println("____________________________________________________________\n");
+                        }
+                    }
+                } catch (StringIndexOutOfBoundsException e) {
                     System.out.println("____________________________________________________________");
                     System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
                     System.out.println("____________________________________________________________\n");
                 }
             } else if (command.equals("event")) {
                 // Handle "event DESCRIPTION /from START /to END"
-                String remaining = userInput.substring(6); // Remove "event "
-                String[] fromParts = remaining.split(" /from ", 2);
-
-                if (fromParts.length == 2) {
-                    String description = fromParts[0].trim();
-                    String[] toParts = fromParts[1].split(" /to ", 2);
-
-                    if (toParts.length == 2 && !description.isEmpty() &&
-                            !toParts[0].trim().isEmpty() && !toParts[1].trim().isEmpty()) {
-                        Task newTask = new Event(description, toParts[0].trim(), toParts[1].trim());
-                        storage.add(newTask);
-                        System.out.println("____________________________________________________________");
-                        System.out.println("Got it. I've added this task:");
-                        System.out.println("  " + newTask);
-                        System.out.println("Now you have " + storage.size() + " task" +
-                                (storage.size() == 1 ? "" : "s") + " in the list.");
-                        System.out.println("____________________________________________________________\n");
-                    } else {
+                try {
+                    if (userInput.length() <= 6) {
                         System.out.println("____________________________________________________________");
                         System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
                         System.out.println("____________________________________________________________\n");
+                    } else {
+                        String remaining = userInput.substring(6); // Remove "event "
+                        String[] fromParts = remaining.split(" /from ", 2);
+
+                        if (fromParts.length == 2) {
+                            String description = fromParts[0].trim();
+                            String[] toParts = fromParts[1].split(" /to ", 2);
+
+                            if (toParts.length == 2 && !description.isEmpty() &&
+                                    !toParts[0].trim().isEmpty() && !toParts[1].trim().isEmpty()) {
+                                Task newTask = new Event(description, toParts[0].trim(), toParts[1].trim());
+                                storage.add(newTask);
+                                System.out.println("____________________________________________________________");
+                                System.out.println("Got it. I've added this task:");
+                                System.out.println("  " + newTask);
+                                System.out.println("Now you have " + storage.size() + " task" +
+                                        (storage.size() == 1 ? "" : "s") + " in the list.");
+                                System.out.println("____________________________________________________________\n");
+                            } else {
+                                System.out.println("____________________________________________________________");
+                                System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
+                                System.out.println("____________________________________________________________\n");
+                            }
+                        } else {
+                            System.out.println("____________________________________________________________");
+                            System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
+                            System.out.println("____________________________________________________________\n");
+                        }
                     }
-                } else {
+                } catch (StringIndexOutOfBoundsException e) {
                     System.out.println("____________________________________________________________");
                     System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
                     System.out.println("____________________________________________________________\n");
                 }
-            } else if (!command.equals("bye") && taskNumber == -1) {
+            } else if (!userInput.trim().equals("bye") && taskNumber == -1) {
                 // Treat as plain ToDo for backward compatibility
                 Task newTask = new ToDo(userInput);
                 storage.add(newTask);
