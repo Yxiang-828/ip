@@ -1,4 +1,5 @@
 package starplatinum.task;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -9,6 +10,89 @@ import java.util.Scanner;
  * Now supports ToDos, Deadlines, and Events!
  */
 public class StarPlatinum {
+
+    /**
+     * Saves the current tasks to a file.
+     * Creates the data directory if it doesn't exist.
+     * Format: T | 0/1 | description
+     *         D | 0/1 | description | by
+     *         E | 0/1 | description | from | to
+     *
+     * @param storage The vector containing all tasks.
+     */
+    private static void saveTasks(Vector<Task> storage) {
+        try {
+            // Create data directory if it doesn't exist
+            File dataDir = new File("./data");
+            if (!dataDir.exists()) {
+                dataDir.mkdirs();
+            }
+
+            // Write tasks to file
+            File file = new File("./data/tasks.txt");
+            try (PrintWriter writer = new PrintWriter(file)) {
+                for (Task task : storage) {
+                    if (task instanceof ToDo) {
+                        writer.println("T | " + (task.isDone ? 1 : 0) + " | " + task.description);
+                    } else if (task instanceof Deadline) {
+                        Deadline d = (Deadline) task;
+                        writer.println("D | " + (task.isDone ? 1 : 0) + " | " + task.description + " | " + d.by);
+                    } else if (task instanceof Event) {
+                        Event e = (Event) task;
+                        writer.println("E | " + (task.isDone ? 1 : 0) + " | " + task.description + " | " + e.from + " | " + e.to);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Loads tasks from the file into the storage.
+     * If file doesn't exist, does nothing.
+     * Handles corrupted lines by skipping them.
+     *
+     * @param storage The vector to populate with loaded tasks.
+     */
+    private static void loadTasks(Vector<Task> storage) {
+        File file = new File("./data/tasks.txt");
+        if (!file.exists()) {
+            return; // No file to load from
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(" \\| ");
+                if (parts.length >= 3) {
+                    String type = parts[0];
+                    boolean done = parts[1].equals("1");
+                    String desc = parts[2];
+                    Task task = null;
+
+                    if (type.equals("T")) {
+                        task = new ToDo(desc);
+                    } else if (type.equals("D") && parts.length >= 4) {
+                        task = new Deadline(desc, parts[3]);
+                    } else if (type.equals("E") && parts.length >= 5) {
+                        task = new Event(desc, parts[3], parts[4]);
+                    }
+
+                    if (task != null) {
+                        if (done) task.mark();
+                        storage.add(task);
+                    }
+                } else {
+                    // Corrupted line - skip and warn
+                    System.out.println("Warning: Skipping corrupted line: " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading tasks: " + e.getMessage());
+        }
+    }
+
     /**
      * Main method that runs the Star Platinum task manager.
      *
@@ -114,12 +198,14 @@ public class StarPlatinum {
                 if (taskNumber > 0 && taskNumber <= storage.size()) {
                     if (command.equals("mark")) {
                         storage.get(taskNumber - 1).mark();
+                        saveTasks(storage);
                         System.out.println("____________________________________________________________");
                         System.out.println("Nice! I've marked this task as done:");
                         System.out.println("  " + storage.get(taskNumber - 1));
                         System.out.println("____________________________________________________________");
                     } else {
                         storage.get(taskNumber - 1).unmark();
+                        saveTasks(storage);
                         System.out.println("____________________________________________________________");
                         System.out.println("OK, I've marked this task as not done yet:");
                         System.out.println("  " + storage.get(taskNumber - 1));
@@ -147,6 +233,7 @@ public class StarPlatinum {
                         } else {
                             Task newTask = new ToDo(description);
                             storage.add(newTask);
+                            saveTasks(storage);
                             System.out.println("____________________________________________________________");
                             System.out.println("Got it. I've added this task:");
                             System.out.println("  " + newTask);
@@ -174,6 +261,7 @@ public class StarPlatinum {
                         if (byParts.length == 2 && !byParts[0].trim().isEmpty() && !byParts[1].trim().isEmpty()) {
                             Task newTask = new Deadline(byParts[0].trim(), byParts[1].trim());
                             storage.add(newTask);
+                            saveTasks(storage);
                             System.out.println("____________________________________________________________");
                             System.out.println("Got it. I've added this task:");
                             System.out.println("  " + newTask);
@@ -210,6 +298,7 @@ public class StarPlatinum {
                                     !toParts[0].trim().isEmpty() && !toParts[1].trim().isEmpty()) {
                                 Task newTask = new Event(description, toParts[0].trim(), toParts[1].trim());
                                 storage.add(newTask);
+                                saveTasks(storage);
                                 System.out.println("____________________________________________________________");
                                 System.out.println("Got it. I've added this task:");
                                 System.out.println("  " + newTask);
@@ -296,6 +385,7 @@ public class StarPlatinum {
                 // Treat as plain ToDo for backward compatibility
                 Task newTask = new ToDo(userInput);
                 storage.add(newTask);
+                saveTasks(storage);
                 System.out.println("____________________________________________________________");
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + newTask);
