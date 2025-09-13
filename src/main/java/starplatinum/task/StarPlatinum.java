@@ -8,6 +8,7 @@ import java.util.Vector;
  * A JoJo's Bizarre Adventure themed todo list manager.
  * Now supports ToDos, Deadlines, and Events!
  */
+//level-6: merge practice
 public class StarPlatinum {
     /**
      * Main method that runs the Star Platinum task manager.
