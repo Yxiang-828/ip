@@ -3,12 +3,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-
 /**
  * Star Platinum task manager application.
  * A JoJo's Bizarre Adventure themed todo list manager.
  * Now supports ToDos, Deadlines, and Events!
  */
+//level-6: merge practice
 public class StarPlatinum {
 
     /**
