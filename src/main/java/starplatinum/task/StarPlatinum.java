@@ -1,7 +1,7 @@
 package starplatinum.task;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.Vector;
 
 /**
  * Star Platinum task manager application.
@@ -35,7 +35,7 @@ public class StarPlatinum {
 
         System.out.println(greeting + "\n");
 
-        Vector<Task> storage = new Vector<>();
+        ArrayList<Task> storage = new ArrayList<>();
         Scanner scanner = new Scanner(System.in);
 
         String userInput = "";
@@ -231,6 +231,66 @@ public class StarPlatinum {
                     System.out.println("____________________________________________________________");
                     System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
                     System.out.println("____________________________________________________________\n");
+                }
+            } else if (command.equals("delete")) {
+                int deleteTaskNumber = -1;
+                if (parts.length >= 2) {
+                    try {
+                        deleteTaskNumber = Integer.parseInt(parts[1]);
+                    } catch (NumberFormatException e) {
+                        deleteTaskNumber = -1;
+                    }
+                }
+
+                if (deleteTaskNumber < 1 || deleteTaskNumber > storage.size()) {
+                    if (storage.isEmpty()) {
+                        System.out.println("____________________________________________________________");
+                        System.out.println("You have nothing to delete.");
+                        System.out.println("____________________________________________________________");
+                        System.out.println();
+                    } else {
+                        if (parts.length < 2) {
+                            System.out.println("Which task number would you like to delete?");
+                        } else {
+                            System.out.println("Invalid task number.");
+                        }
+
+                        // Display task list
+                        System.out.println("____________________________________________________________");
+                        System.out.println("Here are the tasks in your list:");
+                        for (int i = 0; i < storage.size(); i++) {
+                            System.out.println((i + 1) + "." + storage.get(i));
+                        }
+                        System.out.println("____________________________________________________________");
+
+                        // Get task number from user
+                        boolean isValid = false;
+                        while (!isValid) {
+                            System.out.println("Please enter a valid task number:");
+                            if (scanner.hasNextInt()) {
+                                deleteTaskNumber = scanner.nextInt();
+                                scanner.nextLine(); // consume leftover newline
+                                if (deleteTaskNumber >= 1 && deleteTaskNumber <= storage.size()) {
+                                    isValid = true;
+                                } else {
+                                    System.out.println("Number out of range!");
+                                }
+                            } else {
+                                System.out.println("That's not a number!");
+                                scanner.nextLine(); // consume the invalid input
+                            }
+                        }
+
+                        // Execute delete
+                        Delete deleteCommand = new Delete(deleteTaskNumber);
+                        deleteCommand.execute(storage);
+                        System.out.println();
+                    }
+                } else {
+                    // Valid number provided
+                    Delete deleteCommand = new Delete(deleteTaskNumber);
+                    deleteCommand.execute(storage);
+                    System.out.println();
                 }
             } else if (!userInput.trim().equals("bye") && taskNumber == -1) {
                 // Treat as plain ToDo for backward compatibility
