@@ -18,9 +18,9 @@ public class StarPlatinum {
      *         D | 0/1 | description | by
      *         E | 0/1 | description | from | to
      *
-     * @param storage The vector containing all tasks.
+     * @param storage The arraylist containing all tasks.
      */
-    private static void saveTasks(Vector<Task> storage) {
+    private static void saveTasks(ArrayList<Task> storage) {
         try {
             // Create data directory if it doesn't exist
             File dataDir = new File("./data");
@@ -53,9 +53,9 @@ public class StarPlatinum {
      * If file doesn't exist, does nothing.
      * Handles corrupted lines by skipping them.
      *
-     * @param storage The vector to populate with loaded tasks.
+     * @param storage The arraylist to populate with loaded tasks.
      */
-    private static void loadTasks(Vector<Task> storage) {
+    private static void loadTasks(ArrayList<Task> storage) {
         File file = new File("./data/tasks.txt");
         if (!file.exists()) {
             return; // No file to load from
@@ -120,6 +120,7 @@ public class StarPlatinum {
         System.out.println(greeting + "\n");
 
         ArrayList<Task> storage = new ArrayList<>();
+        loadTasks(storage);
         Scanner scanner = new Scanner(System.in);
 
         String userInput = "";
@@ -372,13 +373,17 @@ public class StarPlatinum {
 
                         // Execute delete
                         Delete deleteCommand = new Delete(deleteTaskNumber);
-                        deleteCommand.execute(storage);
+                        if (deleteCommand.execute(storage)) {
+                            saveTasks(storage);
+                        }
                         System.out.println();
                     }
                 } else {
                     // Valid number provided
                     Delete deleteCommand = new Delete(deleteTaskNumber);
-                    deleteCommand.execute(storage);
+                    if (deleteCommand.execute(storage)) {
+                        saveTasks(storage);
+                    }
                     System.out.println();
                 }
             } else if (!userInput.trim().equals("bye") && taskNumber == -1) {
