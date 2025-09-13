@@ -1,0 +1,16 @@
+T | 0 | hey
+T | 0 | goood
+T | 0 | delete 1
+T | 0 | hey
+T | 0 | delete 
+T | 0 | no
+T | 0 | delete pulessse
+T | 0 | nooo
+T | 0 | help 
+T | 1 | save me
+T | 0 | no
+T | 0 | help 
+T | 0 | yeah
+T | 0 | nice
+T | 0 | good
+T | 0 | yes bro, its all inside
