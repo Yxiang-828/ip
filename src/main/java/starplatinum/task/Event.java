@@ -29,4 +29,14 @@ public class Event extends Task {
     public String toString() {
         return "[E]" + (isDone ? "[X]" : "[ ]") + " " + description + " (from: " + from + " to: " + to + ")";
     }
+
+    /**
+     * Returns the event task data in save format.
+     *
+     * @return String representation for saving to file.
+     */
+    @Override
+    public String toSaveFormat() {
+        return "E | " + (isDone ? 1 : 0) + " | " + description + " | " + from + " | " + to;
+    }
 }

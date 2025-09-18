@@ -21,3 +21,12 @@ text-ui-test/EXPECTED-UNIX.TXT
 
 # Ignore C:\Users\xiang\autistic\StarPlatinum.jar
 /StarPlatinum.jar
+
+# Ignore compiled class files
+*.class
+
+# Ignore batch files
+*.bat
+
+# Ignore markdown files
+*.md

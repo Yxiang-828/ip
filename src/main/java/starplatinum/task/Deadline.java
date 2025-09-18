@@ -26,4 +26,14 @@ public class Deadline extends Task {
     public String toString() {
         return "[D]" + (isDone ? "[X]" : "[ ]") + " " + description + " (by: " + by + ")";
     }
+
+    /**
+     * Returns the deadline task data in save format.
+     *
+     * @return String representation for saving to file.
+     */
+    @Override
+    public String toSaveFormat() {
+        return "D | " + (isDone ? 1 : 0) + " | " + description + " | " + by;
+    }
 }

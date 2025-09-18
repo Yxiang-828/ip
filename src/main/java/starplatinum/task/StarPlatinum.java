@@ -1,5 +1,9 @@
 package starplatinum.task;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -10,6 +14,8 @@ import java.util.Scanner;
  */
 //level-6: merge practice
 public class StarPlatinum {
+
+    private static final String HORIZONTAL_LINE = "____________________________________________________________";
 
     /**
      * Saves the current tasks to a file.
@@ -32,15 +38,7 @@ public class StarPlatinum {
             File file = new File("./data/tasks.txt");
             try (PrintWriter writer = new PrintWriter(file)) {
                 for (Task task : storage) {
-                    if (task instanceof ToDo) {
-                        writer.println("T | " + (task.isDone ? 1 : 0) + " | " + task.description);
-                    } else if (task instanceof Deadline) {
-                        Deadline d = (Deadline) task;
-                        writer.println("D | " + (task.isDone ? 1 : 0) + " | " + task.description + " | " + d.by);
-                    } else if (task instanceof Event) {
-                        Event e = (Event) task;
-                        writer.println("E | " + (task.isDone ? 1 : 0) + " | " + task.description + " | " + e.from + " | " + e.to);
-                    }
+                    writer.println(task.toSaveFormat());
                 }
             }
         } catch (IOException e) {
@@ -49,12 +47,29 @@ public class StarPlatinum {
     }
 
     /**
-     * Loads tasks from the file into the storage.
-     * If file doesn't exist, does nothing.
-     * Handles corrupted lines by skipping them.
+     * Deletes a task from the storage by its index.
      *
-     * @param storage The arraylist to populate with loaded tasks.
+     * @param storage The arraylist containing all tasks.
+     * @param taskNumber The 1-based index of the task to delete.
+     * @return true if the task was successfully deleted, false otherwise.
      */
+    private static boolean deleteTask(ArrayList<Task> storage, int taskNumber) {
+        if (taskNumber >= 1 && taskNumber <= storage.size()) {
+            Task removedTask = storage.remove(taskNumber - 1);
+            System.out.println(HORIZONTAL_LINE);
+            System.out.println("Noted. I've removed this task:");
+            System.out.println("  " + removedTask);
+            System.out.println("Now you have " + storage.size() + " task" +
+                    (storage.size() == 1 ? "" : "s") + " in the list.");
+            System.out.println(HORIZONTAL_LINE);
+            return true;
+        } else {
+            System.out.println(HORIZONTAL_LINE);
+            System.out.println("Invalid task number. Cannot delete.");
+            System.out.println(HORIZONTAL_LINE);
+            return false;
+        }
+    }
     private static void loadTasks(ArrayList<Task> storage) {
         File file = new File("./data/tasks.txt");
         if (!file.exists()) {
@@ -108,14 +123,14 @@ public class StarPlatinum {
 
         System.out.println("Hello from\n" + logo);
 
-        String greeting = "____________________________________________________________\n"
+        String greeting = HORIZONTAL_LINE + "\n"
                 + "ORA ORA ORA ORA ORA!\n"
                 + "Star Platinum is here, what can I do for you?\n"
-                + "____________________________________________________________";
+                + HORIZONTAL_LINE;
 
-        String farewell = "____________________________________________________________\n"
+        String farewell = HORIZONTAL_LINE + "\n"
                 + "Yare Yare Daze... Star Platinum will see you again.\n"
-                + "____________________________________________________________";
+                + HORIZONTAL_LINE;
 
         System.out.println(greeting + "\n");
 
@@ -152,7 +167,7 @@ public class StarPlatinum {
             }
 
             if (command.equals("list")) {
-                System.out.println("____________________________________________________________");
+                System.out.println(HORIZONTAL_LINE);
                 if (storage.isEmpty()) {
                     System.out.println("Here are the tasks in your list:");
                     System.out.println("Your list is empty! Time to add some tasks.");
@@ -162,18 +177,18 @@ public class StarPlatinum {
                         System.out.println((i + 1) + "." + storage.get(i));
                     }
                 }
-                System.out.println("____________________________________________________________\n");
+                System.out.println(HORIZONTAL_LINE + "\n");
             } else if (command.equals("mark") || command.equals("unmark")) {
                 if (parts.length < 2) {
                     System.out.println("Which task number would you like to " + command + "?");
 
                     // Display task list
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
                     System.out.println("Here are the tasks in your list:");
                     for (int i = 0; i < storage.size(); i++) {
                         System.out.println((i + 1) + "." + storage.get(i));
                     }
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
 
                     // Get task number from user
                     boolean isValid = false;
@@ -200,61 +215,61 @@ public class StarPlatinum {
                     if (command.equals("mark")) {
                         storage.get(taskNumber - 1).mark();
                         saveTasks(storage);
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("Nice! I've marked this task as done:");
                         System.out.println("  " + storage.get(taskNumber - 1));
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                     } else {
                         storage.get(taskNumber - 1).unmark();
                         saveTasks(storage);
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("OK, I've marked this task as not done yet:");
                         System.out.println("  " + storage.get(taskNumber - 1));
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                     }
                 } else {
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
                     System.out.println("Invalid task number.");
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
                 }
                 System.out.println();
             } else if (command.equals("todo") && parts.length > 1) {
                 // Handle "todo DESCRIPTION"
                 try {
                     if (userInput.length() <= 5) {
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("Invalid todo format! Use: todo DESCRIPTION");
-                        System.out.println("____________________________________________________________\n");
+                        System.out.println(HORIZONTAL_LINE + "\n");
                     } else {
                         String description = userInput.substring(5).trim();
                         if (description.isEmpty()) {
-                            System.out.println("____________________________________________________________");
+                            System.out.println(HORIZONTAL_LINE);
                             System.out.println("Todo description cannot be empty! Use: todo DESCRIPTION");
-                            System.out.println("____________________________________________________________\n");
+                            System.out.println(HORIZONTAL_LINE + "\n");
                         } else {
                             Task newTask = new ToDo(description);
                             storage.add(newTask);
                             saveTasks(storage);
-                            System.out.println("____________________________________________________________");
+                            System.out.println(HORIZONTAL_LINE);
                             System.out.println("Got it. I've added this task:");
                             System.out.println("  " + newTask);
                             System.out.println("Now you have " + storage.size() + " task" +
                                     (storage.size() == 1 ? "" : "s") + " in the list.");
-                            System.out.println("____________________________________________________________\n");
+                            System.out.println(HORIZONTAL_LINE + "\n");
                         }
                     }
                 } catch (StringIndexOutOfBoundsException e) {
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
                     System.out.println("Invalid todo format! Use: todo DESCRIPTION");
-                    System.out.println("____________________________________________________________\n");
+                    System.out.println(HORIZONTAL_LINE + "\n");
                 }
             } else if (command.equals("deadline")) {
                 // Handle "deadline DESCRIPTION /by DATE"
                 try {
                     if (userInput.length() <= 9) {
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
-                        System.out.println("____________________________________________________________\n");
+                        System.out.println(HORIZONTAL_LINE + "\n");
                     } else {
                         String remaining = userInput.substring(9); // Remove "deadline "
                         String[] byParts = remaining.split(" /by ", 2);
@@ -263,30 +278,30 @@ public class StarPlatinum {
                             Task newTask = new Deadline(byParts[0].trim(), byParts[1].trim());
                             storage.add(newTask);
                             saveTasks(storage);
-                            System.out.println("____________________________________________________________");
+                            System.out.println(HORIZONTAL_LINE);
                             System.out.println("Got it. I've added this task:");
                             System.out.println("  " + newTask);
                             System.out.println("Now you have " + storage.size() + " task" +
                                     (storage.size() == 1 ? "" : "s") + " in the list.");
-                            System.out.println("____________________________________________________________\n");
+                            System.out.println(HORIZONTAL_LINE + "\n");
                         } else {
-                            System.out.println("____________________________________________________________");
+                            System.out.println(HORIZONTAL_LINE);
                             System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
-                            System.out.println("____________________________________________________________\n");
+                            System.out.println(HORIZONTAL_LINE + "\n");
                         }
                     }
                 } catch (StringIndexOutOfBoundsException e) {
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
                     System.out.println("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
-                    System.out.println("____________________________________________________________\n");
+                    System.out.println(HORIZONTAL_LINE + "\n");
                 }
             } else if (command.equals("event")) {
                 // Handle "event DESCRIPTION /from START /to END"
                 try {
                     if (userInput.length() <= 6) {
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
-                        System.out.println("____________________________________________________________\n");
+                        System.out.println(HORIZONTAL_LINE + "\n");
                     } else {
                         String remaining = userInput.substring(6); // Remove "event "
                         String[] fromParts = remaining.split(" /from ", 2);
@@ -300,27 +315,27 @@ public class StarPlatinum {
                                 Task newTask = new Event(description, toParts[0].trim(), toParts[1].trim());
                                 storage.add(newTask);
                                 saveTasks(storage);
-                                System.out.println("____________________________________________________________");
+                                System.out.println(HORIZONTAL_LINE);
                                 System.out.println("Got it. I've added this task:");
                                 System.out.println("  " + newTask);
                                 System.out.println("Now you have " + storage.size() + " task" +
                                         (storage.size() == 1 ? "" : "s") + " in the list.");
-                                System.out.println("____________________________________________________________\n");
+                                System.out.println(HORIZONTAL_LINE + "\n");
                             } else {
-                                System.out.println("____________________________________________________________");
+                                System.out.println(HORIZONTAL_LINE);
                                 System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
-                                System.out.println("____________________________________________________________\n");
+                                System.out.println(HORIZONTAL_LINE + "\n");
                             }
                         } else {
-                            System.out.println("____________________________________________________________");
+                            System.out.println(HORIZONTAL_LINE);
                             System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
-                            System.out.println("____________________________________________________________\n");
+                            System.out.println(HORIZONTAL_LINE + "\n");
                         }
                     }
                 } catch (StringIndexOutOfBoundsException e) {
-                    System.out.println("____________________________________________________________");
+                    System.out.println(HORIZONTAL_LINE);
                     System.out.println("Invalid event format! Use: event DESCRIPTION /from START /to END");
-                    System.out.println("____________________________________________________________\n");
+                    System.out.println(HORIZONTAL_LINE + "\n");
                 }
             } else if (command.equals("delete")) {
                 int deleteTaskNumber = -1;
@@ -334,9 +349,9 @@ public class StarPlatinum {
 
                 if (deleteTaskNumber < 1 || deleteTaskNumber > storage.size()) {
                     if (storage.isEmpty()) {
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("You have nothing to delete.");
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println();
                     } else {
                         if (parts.length < 2) {
@@ -346,12 +361,12 @@ public class StarPlatinum {
                         }
 
                         // Display task list
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
                         System.out.println("Here are the tasks in your list:");
                         for (int i = 0; i < storage.size(); i++) {
                             System.out.println((i + 1) + "." + storage.get(i));
                         }
-                        System.out.println("____________________________________________________________");
+                        System.out.println(HORIZONTAL_LINE);
 
                         // Get task number from user
                         boolean isValid = false;
@@ -372,16 +387,14 @@ public class StarPlatinum {
                         }
 
                         // Execute delete
-                        Delete deleteCommand = new Delete(deleteTaskNumber);
-                        if (deleteCommand.execute(storage)) {
+                        if (deleteTask(storage, deleteTaskNumber)) {
                             saveTasks(storage);
                         }
                         System.out.println();
                     }
                 } else {
                     // Valid number provided
-                    Delete deleteCommand = new Delete(deleteTaskNumber);
-                    if (deleteCommand.execute(storage)) {
+                    if (deleteTask(storage, deleteTaskNumber)) {
                         saveTasks(storage);
                     }
                     System.out.println();
@@ -391,12 +404,12 @@ public class StarPlatinum {
                 Task newTask = new ToDo(userInput);
                 storage.add(newTask);
                 saveTasks(storage);
-                System.out.println("____________________________________________________________");
+                System.out.println(HORIZONTAL_LINE);
                 System.out.println("Got it. I've added this task:");
                 System.out.println("  " + newTask);
                 System.out.println("Now you have " + storage.size() + " task" +
                         (storage.size() == 1 ? "" : "s") + " in the list.");
-                System.out.println("____________________________________________________________\n");
+                System.out.println(HORIZONTAL_LINE + "\n");
             }
         }
 

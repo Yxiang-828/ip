@@ -37,4 +37,14 @@ public class Task {
     public String toString() {
         return (isDone ? "[X]" : "[ ]") + " " + description;
     }
+
+    /**
+     * Returns the task data in save format.
+     * Format: TYPE | DONE_STATUS | DESCRIPTION | [ADDITIONAL_FIELDS]
+     *
+     * @return String representation for saving to file.
+     */
+    public String toSaveFormat() {
+        return "T | " + (isDone ? 1 : 0) + " | " + description;
+    }
 }
