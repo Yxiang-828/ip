@@ -25,8 +25,9 @@ text-ui-test/EXPECTED-UNIX.TXT
 # Ignore compiled class files
 *.class
 
-# Ignore batch files
+# Ignore batch files except runtest.bat
 *.bat
+!text-ui-test/runtest.bat
 
 # Ignore markdown files
 *.md
