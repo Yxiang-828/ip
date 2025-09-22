@@ -4,22 +4,22 @@
 
 **Star Platinum** is a **JoJo's Bizarre Adventure themed task management chatbot** designed to help you organize and track your tasks efficiently. With the power of Star Platinum's time-stopping abilities, manage your todos, deadlines, and events with lightning speed!
 
+> *"ZA WARUDO! Time stops, and so do your unfinished tasks!"*
+
 ## Table of Contents
-- [Star Platinum User Guide](#star-platinum-user-guide)
-  - [Table of Contents](#table-of-contents)
-  - [Quick Start](#quick-start)
-  - [Features](#features)
-    - [Adding a Todo Task](#adding-a-todo-task)
-    - [Adding a Deadline Task](#adding-a-deadline-task)
-    - [Adding an Event Task](#adding-an-event-task)
-    - [Listing All Tasks](#listing-all-tasks)
-    - [Marking Tasks as Done](#marking-tasks-as-done)
-    - [Unmarking Tasks](#unmarking-tasks)
-    - [Deleting Tasks](#deleting-tasks)
-    - [Finding Tasks](#finding-tasks)
-    - [Exiting the Application](#exiting-the-application)
-  - [Command Summary](#command-summary)
-  - [FAQ](#faq)
+- [Quick Start](#quick-start)
+- [Features](#features)
+  - [Adding a Todo Task](#adding-a-todo-task)
+  - [Adding a Deadline Task](#adding-a-deadline-task)
+  - [Adding an Event Task](#adding-an-event-task)
+  - [Listing All Tasks](#listing-all-tasks)
+  - [Marking Tasks as Done](#marking-tasks-as-done)
+  - [Unmarking Tasks](#unmarking-tasks)
+  - [Deleting Tasks](#deleting-tasks)
+  - [Finding Tasks](#finding-tasks)
+  - [Exiting the Application](#exiting-the-application)
+- [Command Summary](#command-summary)
+- [FAQ](#faq)
 
 ## Quick Start
 
