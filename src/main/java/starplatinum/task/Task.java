@@ -29,6 +29,15 @@ public class Task {
     }
 
     /**
+     * Returns the task description.
+     *
+     * @return The description of the task.
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
      * Returns a string representation of the task.
      * Completed tasks are shown with [X], incomplete tasks with [ ].
      *

@@ -1,15 +1,18 @@
 package starplatinum.task;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 
 public class Deadline extends Task {
-    protected String by;
+    protected LocalDate by;
 
     /**
      * Creates a new Deadline task.
      *
      * @param description The description of the task.
-     * @param by          The deadline date/time as a string.
+     * @param by          The deadline date/time as a LocalDate.
      */
-    public Deadline(String description, String by) {
+    public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
     }
@@ -22,7 +25,8 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + (isDone ? "[X]" : "[ ]") + " " + description + " (by: " + by + ")";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
+        return "[D]" + (isDone ? "[X]" : "[ ]") + " " + description + " (by: " + by.format(formatter) + ")";
     }
 
     /**
@@ -32,6 +36,6 @@ public class Deadline extends Task {
      */
     @Override
     public String toSaveFormat() {
-        return "D | " + (isDone ? 1 : 0) + " | " + description + " | " + by;
+        return "D | " + (isDone ? 1 : 0) + " | " + description + " | " + by.toString();
     }
 }

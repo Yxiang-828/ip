@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -48,9 +49,22 @@ public class Storage {
                     if (type.equals("T")) {
                         task = new ToDo(desc);
                     } else if (type.equals("D") && parts.length >= 4) {
-                        task = new Deadline(desc, parts[3]);
+                        try {
+                            LocalDate date = LocalDate.parse(parts[3]);
+                            task = new Deadline(desc, date);
+                        } catch (Exception e) {
+                            // Skip corrupted deadline entries with invalid dates
+                            System.out.println("Warning: Skipping corrupted deadline: " + line);
+                        }
                     } else if (type.equals("E") && parts.length >= 5) {
-                        task = new Event(desc, parts[3], parts[4]);
+                        try {
+                            LocalDate fromDate = LocalDate.parse(parts[3]);
+                            LocalDate toDate = LocalDate.parse(parts[4]);
+                            task = new Event(desc, fromDate, toDate);
+                        } catch (Exception e) {
+                            // Skip corrupted event entries with invalid dates
+                            System.out.println("Warning: Skipping corrupted event: " + line);
+                        }
                     }
 
                     if (task != null) {

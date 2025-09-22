@@ -1,5 +1,6 @@
 package starplatinum.task;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -175,6 +176,25 @@ public class Ui {
      */
     public void showEmptyCommand() {
         System.out.println("Please enter a command. Type 'list' to see your tasks or 'bye' to exit.");
+    }
+
+    /**
+     * Shows the results of a find command.
+     *
+     * @param foundTasks The list of tasks that match the search.
+     * @param keyword    The search keyword that was used.
+     */
+    public void showFindResults(ArrayList<Task> foundTasks, String keyword) {
+        System.out.println(HORIZONTAL_LINE);
+        if (foundTasks.isEmpty()) {
+            System.out.println("No tasks found containing '" + keyword + "'.");
+        } else {
+            System.out.println("Here are the matching tasks for '" + keyword + "':");
+            for (int i = 0; i < foundTasks.size(); i++) {
+                System.out.println((i + 1) + "." + foundTasks.get(i));
+            }
+        }
+        System.out.println(HORIZONTAL_LINE + "\n");
     }
 
     /**

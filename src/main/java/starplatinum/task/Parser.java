@@ -1,5 +1,7 @@
 package starplatinum.task;
 
+import java.time.LocalDate;
+
 /**
  * Parses user input commands and extracts relevant information.
  */
@@ -59,39 +61,49 @@ public class Parser {
      * Parses deadline information from the input.
      *
      * @param input The user's input string.
-     * @return A String array containing [description, byDate].
+     * @return An Object array containing [description, byDate] where byDate is a LocalDate.
      * @throws StarPlatinumException If the format is invalid.
      */
-    public static String[] parseDeadline(String input) throws StarPlatinumException {
+    public static Object[] parseDeadline(String input) throws StarPlatinumException {
         if (input.length() <= 8) {
-            throw new StarPlatinumException("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
+            throw new StarPlatinumException("Invalid deadline format! Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
         String remaining = input.substring(8).trim(); // Remove "deadline"
         String[] byParts = remaining.split(" /by ", 2);
 
         if (byParts.length != 2 || byParts[0].trim().isEmpty() || byParts[1].trim().isEmpty()) {
-            throw new StarPlatinumException("Invalid deadline format! Use: deadline DESCRIPTION /by DATE");
+            throw new StarPlatinumException("Invalid deadline format! Use: deadline DESCRIPTION /by yyyy-MM-dd");
         }
 
-        return new String[] { byParts[0].trim(), byParts[1].trim() };
+        String description = byParts[0].trim();
+        String dateString = byParts[1].trim();
+
+        LocalDate date;
+        try {
+            date = LocalDate.parse(dateString);
+        } catch (Exception e) {
+            throw new StarPlatinumException("Invalid date format! Use yyyy-MM-dd format (e.g., 2019-10-15)");
+        }
+
+        return new Object[] { description, date };
     }
 
     /**
      * Parses event information from the input.
      *
      * @param input The user's input string.
-     * @return A String array containing [description, fromTime, toTime].
+     * @return An Object array containing [description, fromDate, toDate] where dates are LocalDate.
      * @throws StarPlatinumException If the format is invalid.
      */
-    public static String[] parseEvent(String input) throws StarPlatinumException {
+    public static Object[] parseEvent(String input) throws StarPlatinumException {
         if (input.length() <= 5) {
-            throw new StarPlatinumException("Invalid event format! Use: event DESCRIPTION /from START /to END");
+            throw new StarPlatinumException("Invalid event format! Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
         String remaining = input.substring(5).trim(); // Remove "event "
         String[] fromParts = remaining.split(" /from ", 2);
 
         if (fromParts.length != 2) {
-            throw new StarPlatinumException("Invalid event format! Use: event DESCRIPTION /from START /to END");
+            throw new StarPlatinumException("Invalid event format! Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
 
         String description = fromParts[0].trim();
@@ -99,9 +111,44 @@ public class Parser {
 
         if (toParts.length != 2 || description.isEmpty() ||
                 toParts[0].trim().isEmpty() || toParts[1].trim().isEmpty()) {
-            throw new StarPlatinumException("Invalid event format! Use: event DESCRIPTION /from START /to END");
+            throw new StarPlatinumException("Invalid event format! Use: event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd");
         }
 
-        return new String[] { description, toParts[0].trim(), toParts[1].trim() };
+        String fromDateString = toParts[0].trim();
+        String toDateString = toParts[1].trim();
+
+        LocalDate fromDate;
+        LocalDate toDate;
+        try {
+            fromDate = LocalDate.parse(fromDateString);
+            toDate = LocalDate.parse(toDateString);
+        } catch (Exception e) {
+            throw new StarPlatinumException("Invalid date format! Use yyyy-MM-dd format for both dates (e.g., 2019-10-15)");
+        }
+
+        // Validate that from date is not after to date
+        if (fromDate.isAfter(toDate)) {
+            throw new StarPlatinumException("Invalid event dates! The start date cannot be after the end date.");
+        }
+
+        return new Object[] { description, fromDate, toDate };
+    }
+
+    /**
+     * Parses the find command to extract the search keyword.
+     *
+     * @param input The user's input string.
+     * @return The search keyword.
+     * @throws StarPlatinumException If the format is invalid.
+     */
+    public static String parseFind(String input) throws StarPlatinumException {
+        if (input.length() <= 4) {
+            throw new StarPlatinumException("Invalid find format! Use: find KEYWORD");
+        }
+        String keyword = input.substring(4).trim();
+        if (keyword.isEmpty()) {
+            throw new StarPlatinumException("Find keyword cannot be empty! Use: find KEYWORD");
+        }
+        return keyword;
     }
 }

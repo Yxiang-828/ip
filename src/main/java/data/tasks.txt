@@ -1,5 +1,17 @@
+T | 0 | k
 T | 0 | hey
-T | 0 | fcfd
-T | 0 | fd
-T | 0 | fd
-T | 0 | df
+T | 0 | good
+D | 1 | ddf | 2003-10-22
+T | 0 | aad
+T | 1 | d
+T | 0 | d
+T | 1 | sa
+T | 0 | d
+T | 0 | afd
+T | 0 | hey
+T | 0 | idiot
+T | 0 | wow
+T | 0 | good
+E | 0 | blabla | 2019-01-13 | 2021-12-02
+E | 0 | blabla | 2027-01-13 | 2021-12-02
+E | 0 | blabla | 2033-01-11 | 2132-12-02

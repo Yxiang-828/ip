@@ -1,5 +1,8 @@
 package starplatinum.task;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 /**
  * Star Platinum task manager application.
  * A JoJo's Bizarre Adventure themed todo list manager.
@@ -73,6 +76,10 @@ public class StarPlatinum {
                         handleDeleteCommand(input);
                         break;
 
+                    case "find":
+                        handleFindCommand(input);
+                        break;
+
                     default:
                         if (input.trim().isEmpty()) {
                             ui.showEmptyCommand();
@@ -82,6 +89,7 @@ public class StarPlatinum {
                         break;
                 }
 
+                // Save tasks after successful operations (except list and bye)
                 if (!command.equals("list") && !command.equals("bye")) {
                     storage.save(tasks.getAllTasks());
                 }
@@ -138,8 +146,8 @@ public class StarPlatinum {
      * Handles the deadline command.
      */
     private void handleDeadlineCommand(String input) throws StarPlatinumException {
-        String[] deadlineInfo = Parser.parseDeadline(input);
-        Task newTask = new Deadline(deadlineInfo[0], deadlineInfo[1]);
+        Object[] deadlineInfo = Parser.parseDeadline(input);
+        Task newTask = new Deadline((String)deadlineInfo[0], (LocalDate)deadlineInfo[1]);
         tasks.add(newTask);
         ui.showTaskAdded(newTask, tasks);
     }
@@ -148,8 +156,8 @@ public class StarPlatinum {
      * Handles the event command.
      */
     private void handleEventCommand(String input) throws StarPlatinumException {
-        String[] eventInfo = Parser.parseEvent(input);
-        Task newTask = new Event(eventInfo[0], eventInfo[1], eventInfo[2]);
+        Object[] eventInfo = Parser.parseEvent(input);
+        Task newTask = new Event((String)eventInfo[0], (LocalDate)eventInfo[1], (LocalDate)eventInfo[2]);
         tasks.add(newTask);
         ui.showTaskAdded(newTask, tasks);
     }
@@ -166,6 +174,15 @@ public class StarPlatinum {
 
         Task deletedTask = tasks.delete(taskNumber - 1); // Convert to 0-based index
         ui.showTaskDeleted(deletedTask, tasks);
+    }
+
+    /**
+     * Handles the find command.
+     */
+    private void handleFindCommand(String input) throws StarPlatinumException {
+        String keyword = Parser.parseFind(input);
+        ArrayList<Task> foundTasks = tasks.findTasks(keyword);
+        ui.showFindResults(foundTasks, keyword);
     }
 
     /**

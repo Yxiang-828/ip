@@ -1,17 +1,20 @@
 package starplatinum.task;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class Event extends Task {
-    protected String from;
-    protected String to;
+    protected LocalDate from;
+    protected LocalDate to;
 
     /**
      * Creates a new Event task.
      *
      * @param description The description of the task.
-     * @param from        The start date/time as a string.
-     * @param to          The end date/time as a string.
+     * @param from        The start date as a LocalDate.
+     * @param to          The end date as a LocalDate.
      */
-    public Event(String description, String from, String to) {
+    public Event(String description, LocalDate from, LocalDate to) {
         super(description);
         this.from = from;
         this.to = to;
@@ -25,7 +28,8 @@ public class Event extends Task {
      */
     @Override
     public String toString() {
-        return "[E]" + (isDone ? "[X]" : "[ ]") + " " + description + " (from: " + from + " to: " + to + ")";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
+        return "[E]" + (isDone ? "[X]" : "[ ]") + " " + description + " (from: " + from.format(formatter) + " to: " + to.format(formatter) + ")";
     }
 
     /**
@@ -35,6 +39,6 @@ public class Event extends Task {
      */
     @Override
     public String toSaveFormat() {
-        return "E | " + (isDone ? 1 : 0) + " | " + description + " | " + from + " | " + to;
+        return "E | " + (isDone ? 1 : 0) + " | " + description + " | " + from.toString() + " | " + to.toString();
     }
 }
