@@ -147,7 +147,7 @@ public class StarPlatinum {
      */
     private void handleDeadlineCommand(String input) throws StarPlatinumException {
         Object[] deadlineInfo = Parser.parseDeadline(input);
-        Task newTask = new Deadline((String)deadlineInfo[0], (LocalDate)deadlineInfo[1]);
+        Task newTask = new Deadline((String) deadlineInfo[0], (LocalDate) deadlineInfo[1]);
         tasks.add(newTask);
         ui.showTaskAdded(newTask, tasks);
     }
@@ -157,7 +157,7 @@ public class StarPlatinum {
      */
     private void handleEventCommand(String input) throws StarPlatinumException {
         Object[] eventInfo = Parser.parseEvent(input);
-        Task newTask = new Event((String)eventInfo[0], (LocalDate)eventInfo[1], (LocalDate)eventInfo[2]);
+        Task newTask = new Event((String) eventInfo[0], (LocalDate) eventInfo[1], (LocalDate) eventInfo[2]);
         tasks.add(newTask);
         ui.showTaskAdded(newTask, tasks);
     }
@@ -188,7 +188,7 @@ public class StarPlatinum {
     /**
      * Main method that starts the Star Platinum task manager.
      *
-     * @param args Command line arguments (not used).
+     * @param args Command line arguments (not used)
      */
     public static void main(String[] args) {
         new StarPlatinum("data/tasks.txt").run();
