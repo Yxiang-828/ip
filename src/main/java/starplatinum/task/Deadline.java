@@ -1,7 +1,5 @@
 package starplatinum.task;
-/**
- * Example: "submit report by 11/10/2019 5pm"
- */
+
 public class Deadline extends Task {
     protected String by;
 
@@ -9,7 +7,7 @@ public class Deadline extends Task {
      * Creates a new Deadline task.
      *
      * @param description The description of the task.
-     * @param by The deadline date/time as a string.
+     * @param by          The deadline date/time as a string.
      */
     public Deadline(String description, String by) {
         super(description);
