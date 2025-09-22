@@ -36,11 +36,15 @@
 
 Creates a simple task without any time constraints.
 
-**Command Format:** `todo DESCRIPTION`
+**Command Format:** `todo DESCRIPTION` or simply `DESCRIPTION`
 
-**Example:**
+**Examples:**
 ```
 todo Buy groceries
+```
+or simply:
+```
+Buy groceries
 ```
 
 **Expected Output:**
@@ -51,6 +55,8 @@ Got it. I've added this task:
 Now you have 1 task in the list.
 ____________________________________________________________
 ```
+
+**Note:** You can omit the `todo` keyword - just typing the task description will create a todo task by default.
 
 ### Adding a Deadline Task
 
@@ -214,7 +220,7 @@ ____________________________________________________________
 
 | Command | Format | Example |
 |---------|--------|---------|
-| Todo | `todo DESCRIPTION` | `todo Buy groceries` |
+| Todo | `todo DESCRIPTION` or `DESCRIPTION` | `todo Buy groceries` or `Buy groceries` |
 | Deadline | `deadline DESCRIPTION /by yyyy-MM-dd` | `deadline Submit assignment /by 2025-09-30` |
 | Event | `event DESCRIPTION /from yyyy-MM-dd /to yyyy-MM-dd` | `event Team meeting /from 2025-10-01 /to 2025-10-01` |
 | List | `list` | `list` |
@@ -225,6 +231,10 @@ ____________________________________________________________
 | Exit | `bye` | `bye` |
 
 ## FAQ
+
+**Q: How do I add a simple task?**
+
+A: You can add a todo task in two ways: `todo Buy groceries` or simply `Buy groceries`. The `todo` keyword is optional - just typing the description will create a todo task by default.
 
 **Q: How do I transfer my data to another computer?**
 
