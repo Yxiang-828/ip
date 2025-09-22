@@ -182,7 +182,7 @@ public class StarPlatinum {
     private void handleFindCommand(String input) throws StarPlatinumException {
         String keyword = Parser.parseFind(input);
         ArrayList<Task> foundTasks = tasks.findTasks(keyword);
-        ui.showFindResults(foundTasks, keyword);
+        ui.showFindResults(foundTasks, keyword); // Pass the keyword for display
     }
 
     /**
