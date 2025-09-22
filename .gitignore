@@ -30,4 +30,3 @@ text-ui-test/EXPECTED-UNIX.TXT
 !text-ui-test/runtest.bat
 
 # Ignore markdown files
-*.md
