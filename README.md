@@ -1,6 +1,6 @@
 # Star Platinum User Guide
 
-![Star Platinum Logo](https://i.imgur.com/6Q3Z3Zv.png)
+![Star Platinum Logo](docs/images/jojo.jpg)
 
 **Star Platinum** is a **JoJo's Bizarre Adventure themed task management chatbot** designed to help you organize and track your tasks efficiently. With the power of Star Platinum's time-stopping abilities, manage your todos, deadlines, and events with lightning speed!
 
