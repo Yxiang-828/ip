@@ -4,9 +4,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
- * Star Platinum task manager application.
+ * Star Platinum task manager.
  * A JoJo's Bizarre Adventure themed todo list manager.
  */
+
 public class StarPlatinum {
 
     private final Ui ui;
